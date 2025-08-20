@@ -1,0 +1,239 @@
+{% extends "bookmark/base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">ブックマークを追加</h1>
+        <p class="text-gray-600 dark:text-gray-400">URLを入力してOGP情報を自動取得し、プレビューを確認してから登録できます。</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- 入力フォーム -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <form method="post" id="bookmarkForm" class="space-y-4">
+                {% csrf_token %}
+                
+                <!-- URL入力 -->
+                <div>
+                    <label for="url-input" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                        URL *
+                    </label>
+                    <div class="flex gap-2">
+                        <input type="url" 
+                               id="url-input" 
+                               name="url" 
+                               placeholder="https://example.com" 
+                               required
+                               class="flex-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <button type="button" 
+                                id="fetch-btn"
+                                class="px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
+                            取得
+                        </button>
+                    </div>
+                </div>
+
+                <!-- タイトル -->
+                <div>
+                    <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                        {{ form.title.label }}
+                    </label>
+                    {% render_field form.title id="title-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
+                </div>
+
+                <!-- 説明 -->
+                <div>
+                    <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                        {{ form.description.label }}
+                    </label>
+                    {% render_field form.description id="description-input" rows="3" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
+                </div>
+
+                <!-- カテゴリ -->
+                <div>
+                    <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                        {{ form.category.label }}
+                    </label>
+                    {% render_field form.category class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
+                    {% render_field form.new_category placeholder="新しいカテゴリ名" class="mt-2 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
+                </div>
+
+                <!-- タグ -->
+                <div>
+                    <label for="{{ form.tags.id_for_label }}" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                        {{ form.tags.label }}
+                    </label>
+                    {% render_field form.tags class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
+                    {% render_field form.new_tags placeholder="新しいタグ（カンマ区切り）" class="mt-2 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
+                </div>
+
+                <!-- 登録ボタン -->
+                <button type="submit" 
+                        class="w-full py-3 px-4 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
+                    ブックマークを登録
+                </button>
+            </form>
+        </div>
+
+        <!-- プレビュー -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">プレビュー</h2>
+            
+            <div id="preview-container" class="space-y-4">
+                <div id="loading" class="hidden">
+                    <div class="flex items-center justify-center p-8">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                        <span class="ml-2 text-gray-600 dark:text-gray-400">OGP情報を取得中...</span>
+                    </div>
+                </div>
+                
+                <div id="preview-content" class="hidden">
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                        <div id="preview-image" class="hidden">
+                            <img id="og-image" src="" alt="" class="w-full h-48 object-cover">
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center mb-2">
+                                <img id="favicon" src="" alt="" class="w-4 h-4 mr-2 hidden">
+                                <span id="site-name" class="text-sm text-gray-500 dark:text-gray-400"></span>
+                            </div>
+                            <h3 id="preview-title" class="text-lg font-semibold text-gray-900 dark:text-white mb-2"></h3>
+                            <p id="preview-description" class="text-sm text-gray-600 dark:text-gray-400 mb-2"></p>
+                            <p id="preview-url" class="text-xs text-blue-600 dark:text-blue-400 truncate"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="error-message" class="hidden">
+                    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                        <p class="text-red-800 dark:text-red-200 text-sm" id="error-text"></p>
+                    </div>
+                </div>
+                
+                <div id="empty-state" class="text-center py-8">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">URLを入力して「取得」ボタンを押すとプレビューが表示されます</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const urlInput = document.getElementById('url-input');
+    const fetchBtn = document.getElementById('fetch-btn');
+    const titleInput = document.getElementById('title-input');
+    const descriptionInput = document.getElementById('description-input');
+    
+    const loading = document.getElementById('loading');
+    const previewContent = document.getElementById('preview-content');
+    const previewImage = document.getElementById('preview-image');
+    const ogImage = document.getElementById('og-image');
+    const favicon = document.getElementById('favicon');
+    const siteName = document.getElementById('site-name');
+    const previewTitle = document.getElementById('preview-title');
+    const previewDescription = document.getElementById('preview-description');
+    const previewUrl = document.getElementById('preview-url');
+    const errorMessage = document.getElementById('error-message');
+    const errorText = document.getElementById('error-text');
+    const emptyState = document.getElementById('empty-state');
+
+    fetchBtn.addEventListener('click', fetchOGPData);
+    urlInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            fetchOGPData();
+        }
+    });
+
+    function fetchOGPData() {
+        const url = urlInput.value.trim();
+        if (!url) {
+            showError('URLを入力してください');
+            return;
+        }
+
+        // 状態をリセット
+        hideAll();
+        showLoading();
+
+        fetch('{% url "bookmark:fetch_ogp_data" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({ url: url })
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            if (data.success) {
+                showPreview(data);
+                // フォームに値を設定
+                titleInput.value = data.title || '';
+                descriptionInput.value = data.description || '';
+            } else {
+                showError(data.error || 'OGP情報の取得に失敗しました');
+            }
+        })
+        .catch(error => {
+            hideLoading();
+            showError('ネットワークエラーが発生しました');
+            console.error('Error:', error);
+        });
+    }
+
+    function showLoading() {
+        loading.classList.remove('hidden');
+    }
+
+    function hideLoading() {
+        loading.classList.add('hidden');
+    }
+
+    function showPreview(data) {
+        // プレビュー要素を更新
+        if (data.image) {
+            ogImage.src = data.image;
+            previewImage.classList.remove('hidden');
+        } else {
+            previewImage.classList.add('hidden');
+        }
+
+        if (data.favicon_url) {
+            favicon.src = data.favicon_url;
+            favicon.classList.remove('hidden');
+        } else {
+            favicon.classList.add('hidden');
+        }
+
+        siteName.textContent = data.site_name || '';
+        previewTitle.textContent = data.title || 'タイトルなし';
+        previewDescription.textContent = data.description || '説明なし';
+        previewUrl.textContent = data.url;
+
+        previewContent.classList.remove('hidden');
+    }
+
+    function showError(message) {
+        errorText.textContent = message;
+        errorMessage.classList.remove('hidden');
+    }
+
+    function hideAll() {
+        loading.classList.add('hidden');
+        previewContent.classList.add('hidden');
+        errorMessage.classList.add('hidden');
+        emptyState.classList.add('hidden');
+    }
+});
+</script>
+{% endblock content %}
+
+{% block pagination %}
+{% endblock pagination %}

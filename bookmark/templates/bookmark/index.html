@@ -1,6 +1,28 @@
 {% extends "bookmark/base.html" %}
 {% block content %}
   {{ block.super }}
+  
+  <!-- ブックマーク追加ボタン -->
+  <div class="mb-6 flex gap-2">
+    <a href="{% url 'bookmark:quick_add_bookmark' %}"
+       class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+        <path d="M12 5l0 14" />
+        <path d="M5 12l14 0" />
+      </svg>
+      クイック追加
+    </a>
+    <a href="{% url 'bookmark:add_bookmark' %}"
+       class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+        <path d="M16 5l3 3" />
+      </svg>
+      詳細追加
+    </a>
+  </div>
+  
   <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for item in items %}
       <div class="max-w-xl flex flex-col bg-white border shadow-sm rounded-lg dark:bg-gray-900 dark:border-gray-700 dark:shadow-gray-700/70">
