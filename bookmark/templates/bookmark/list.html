@@ -1,0 +1,87 @@
+{% extends "bookmark/base.html" %}
+{% block content %}
+  {{ block.super }}
+  <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+    <div class="mx-auto max-w-5xl">
+      <div class="mt-6 flow-root sm:mt-8">
+        <div class="divide-y divide-gray-200 dark:divide-gray-700">
+          {% for item in items %}
+            <div class="grid md:grid-cols-12 gap-4 md:gap-6 py-4 md:py-6">
+              <dl class="md:col-span-3 order-3 md:order-1">
+                <dt class="sr-only">Product:</dt>
+                <dd class="text-base font-semibold text-gray-900 dark:text-white">
+                  <a href="{{ item.url }}" target="_blank" class="hover:underline">{{ item.title }}</a>
+                </dd>
+              </dl>
+              <dl class="md:col-span-6 order-4 md:order-2">
+                <dt class="sr-only">Message:</dt>
+                <dd class=" text-gray-500 dark:text-gray-400">
+                  {{ item.og_description }}
+                </dd>
+              </dl>
+              <div class="md:col-span-3 content-center order-1 md:order-3 flex items-center justify-between">
+                <button id="actionsMenuDropdown_{{ item.id }}"
+                        data-dropdown-toggle="dropdownOrder_{{ item.id }}"
+                        type="button"
+                        class="inline-flex h-7 w-7 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                  <span class="sr-only">Actions</span>
+                  <svg class="h-6 w-6"
+                       aria-hidden="true"
+                       xmlns="http://www.w3.org/2000/svg"
+                       width="24"
+                       height="24"
+                       fill="none"
+                       viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-width="4" d="M6 12h.01m6 0h.01m5.99 0h.01"></path>
+                  </svg>
+                </button>
+                <div id="dropdownOrder_{{ item.id }}"
+                     class="z-10 hidden w-48 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
+                     data-popper-placement="bottom">
+                  <ul class="p-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400"
+                      aria-labelledby="actionsMenuDropdown_{{ item.id }}">
+                    <li>
+                      <a href="{% url 'bookmark:edit' item.id %}"
+                         class="group inline-flex w-full items-center rounded-md px-3 py-2 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white">
+                        <svg class="me-1.5 h-4 w-4 text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                             aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg"
+                             width="24"
+                             height="24"
+                             fill="none"
+                             viewBox="0 0 24 24">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
+                        </svg>
+                        <span>Edit bookmark</span>
+                      </a>
+                    </li>
+                    <li>
+                      <button id="deleteModal"
+                              type="button"
+                              data-modal-target="deleteBookmarkModal"
+                              data-modal-toggle="deleteBookmarkModal"
+                              data-id="{{ item.id }}"
+                              class="group inline-flex w-full items-center rounded-md px-3 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-500">
+                        <svg class="me-1.5 h-4 w-4"
+                             aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg"
+                             width="24"
+                             height="24"
+                             fill="none"
+                             viewBox="0 0 24 24">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z">
+                          </path>
+                        </svg>
+                        Delete bookmark
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

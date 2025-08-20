@@ -1,0 +1,58 @@
+<div class="max-w-sm bg-white rounded-lg shadow dark:bg-gray-800">
+  <a href="{% url 'catalog:detail_item' str=item.serial_no %}">
+    <img class="rounded-t-lg" src="/media/{{ item.cover }}" alt="" />
+  </a>
+  <div class="p-4">
+    <div class="flex justify-between mb-2">
+      {% include "components/rating.html" with rating=item.rating.score %}
+      {% if item.uncensored %}
+        <span class="inline-flex items-center gap-x-1 text-xs font-medium text-red-600 dark:text-red-50">
+          <svg class="shrink-0 size-3"
+               xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+            <path d="M12 9v4"></path>
+            <path d="M12 17h.01"></path>
+          </svg>
+          Uncensored
+        </span>
+      {% else %}
+        <span class="inline-flex items-center gap-x-1 text-xs font-medium text-sky-600 dark:text-sky-50">
+          <svg class="shrink-0 size-3"
+               xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round">
+            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+            <path d="m9 12 2 2 4-4"></path>
+          </svg>
+          Censored
+        </span>
+      {% endif %}
+    </div>
+    <a href="{% url 'catalog:detail_item' str=item.serial_no %}">
+      <h5 class="mb-2 text-lg font-bold tracking-tight text-stone-700 dark:text-white">{{ item.title }}</h5>
+    </a>
+    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"></p>
+    {% for tag in item.tags.all %}
+      <a href="{% url 'catalog:detail_tag' str=tag.name %}"
+         class="bg-yellow-100 text-yellow-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-700 dark:text-yellow-300 border border-yellow-500">{{ tag.name }}</a>
+    {% endfor %}
+    {% if item.category %}
+      <a href="{% url 'catalog:detail_category' str=item.category %}"
+         class="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-700 dark:text-green-300 border border-green-500">{{ item.category }}</a>
+    {% endif %}
+  </div>
+</div>

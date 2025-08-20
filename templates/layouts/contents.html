@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    {% if debug %}
+      <script src="https://cdn.tailwindcss.com"></script>
+    {% else %}
+      <link href="{% static 'dist/tailwind.min.css' %}" rel="stylesheet" />
+    {% endif %}
+    <link href="{% static 'vendor/videojs/video-js.min.css' %}"
+          rel="stylesheet" />
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+    {% block head %}
+    {% endblock head %}
+    <title>
+      {% block title %}
+        myApp
+      {% endblock title %}
+    </title>
+  </head>
+  <body class="mx-auto flex min-h-screen flex-col justify-between dark:bg-gray-900">
+    {% block navbar %}
+      {% include "layouts/navbar.html" %}
+    {% endblock navbar %}
+    {% block sidebar %}
+    {% endblock sidebar %}
+    <div class="grow sm:p-4">
+      {% block content %}
+      {% endblock content %}
+    </div>
+    <div>
+      {% block pagination %}
+      {% endblock pagination %}
+      {% include "layouts/footer.html" %}
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+  <script src="{% static 'vendor/videojs/video.min.js' %}"></script>
+  <script src="{% static 'vendor/videojs-sprite-thumbnails/videojs-sprite-thumbnails.min.js' %}"></script>
+  <script src="{% static 'vendor/htmx/htmx.min.js' %}"></script>
+  <script src="{% static 'js/pagination.js' %}"></script>
+  {% block script %}
+  {% endblock script %}
+</body>
+</html>

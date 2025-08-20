@@ -1,0 +1,72 @@
+{% extends "layouts/base.html" %}
+{% block title %}
+  Bookmark - {{ block.super }}
+{% endblock title %}
+{% block sidebar %}
+  {% include "bookmark/sidebar.html" %}
+{% endblock sidebar %}
+{% block content %}
+  <div class="flex flex-row justify-end align-middle mb-4">
+    <a href="{% url 'bookmark:list' %}"
+       class="relative inline-flex justify-center items-center size-10 text-sm font-semibold rounded-s-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2"
+           stroke-linecap="round"
+           stroke-linejoin="round"
+           class="icon icon-tabler icons-tabler-outline icon-tabler-list">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M9 6l11 0" />
+        <path d="M9 12l11 0" />
+        <path d="M9 18l11 0" />
+        <path d="M5 6l0 .01" />
+        <path d="M5 12l0 .01" />
+        <path d="M5 18l0 .01" />
+      </svg>
+    </a>
+    <a href="{% url 'bookmark:index' %}"
+       class="relative inline-flex justify-center items-center size-10 text-sm font-semibold border-t border-b border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2"
+           stroke-linecap="round"
+           stroke-linejoin="round"
+           class="icon icon-tabler icons-tabler-outline icon-tabler-category-2">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M14 4h6v6h-6z" />
+        <path d="M4 14h6v6h-6z" />
+        <path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+        <path d="M7 7m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+      </svg>
+    </a>
+    <a href="{% url 'bookmark:table' %}"
+       class="relative inline-flex justify-center items-center size-10 text-sm font-semibold rounded-e-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2"
+           stroke-linecap="round"
+           stroke-linejoin="round"
+           class="icon icon-tabler icons-tabler-outline icon-tabler-table">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+        <path d="M3 10h18" />
+        <path d="M10 3v18" />
+      </svg>
+    </a>
+  </div>
+{% endblock content %}
+{% block pagination %}
+  {% include "components/pagination.html" %}
+{% endblock pagination %}
