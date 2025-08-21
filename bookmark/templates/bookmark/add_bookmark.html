@@ -33,6 +33,15 @@
                             </label>
                             {% render_field form.tags class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
                             {% render_field form.new_tags class="mt-4 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
+                            
+                            <!-- OGP情報の隠しフィールド -->
+                            {% render_field form.og_title %}
+                            {% render_field form.og_description %}
+                            {% render_field form.og_image %}
+                            {% render_field form.og_type %}
+                            {% render_field form.og_site_name %}
+                            {% render_field form.favicon_url %}
+                            
                             <button type="submit"
                                     class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-blue-600 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:text-blue-500">
                                    登録

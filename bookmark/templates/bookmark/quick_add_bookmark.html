@@ -68,6 +68,14 @@
                     {% render_field form.new_tags placeholder="新しいタグ（カンマ区切り）" class="mt-2 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
                 </div>
 
+                <!-- OGP情報の隠しフィールド -->
+                {% render_field form.og_title id="og-title-input" %}
+                {% render_field form.og_description id="og-description-input" %}
+                {% render_field form.og_image id="og-image-input" %}
+                {% render_field form.og_type id="og-type-input" %}
+                {% render_field form.og_site_name id="og-site-name-input" %}
+                {% render_field form.favicon_url id="favicon-url-input" %}
+
                 <!-- 登録ボタン -->
                 <button type="submit" 
                         class="w-full py-3 px-4 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
@@ -129,6 +137,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const titleInput = document.getElementById('title-input');
     const descriptionInput = document.getElementById('description-input');
     
+    // OGP情報の隠しフィールド
+    const ogTitleInput = document.getElementById('og-title-input');
+    const ogDescriptionInput = document.getElementById('og-description-input');
+    const ogImageInput = document.getElementById('og-image-input');
+    const ogTypeInput = document.getElementById('og-type-input');
+    const ogSiteNameInput = document.getElementById('og-site-name-input');
+    const faviconUrlInput = document.getElementById('favicon-url-input');
+    
     const loading = document.getElementById('loading');
     const previewContent = document.getElementById('preview-content');
     const previewImage = document.getElementById('preview-image');
@@ -177,6 +193,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 // フォームに値を設定
                 titleInput.value = data.title || '';
                 descriptionInput.value = data.description || '';
+                
+                // OGP情報を隠しフィールドに設定
+                ogTitleInput.value = data.title || '';
+                ogDescriptionInput.value = data.description || '';
+                ogImageInput.value = data.image || '';
+                ogTypeInput.value = data.type || '';
+                ogSiteNameInput.value = data.site_name || '';
+                faviconUrlInput.value = data.favicon_url || '';
             } else {
                 showError(data.error || 'OGP情報の取得に失敗しました');
             }

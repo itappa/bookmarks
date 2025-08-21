@@ -4,6 +4,7 @@ from django.views.generic import ListView
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.core.files.base import ContentFile
 import json
 import requests
 from bs4 import BeautifulSoup
@@ -62,7 +63,34 @@ def add_bookmark(request):
     if request.method == "POST":
         form = BookmarkForm(request.POST)
         if form.is_valid():
-            bookmark = form.save()
+            bookmark = form.save(commit=False)
+            
+            # OGP情報を設定
+            bookmark.og_title = form.cleaned_data.get('og_title', '')
+            bookmark.og_description = form.cleaned_data.get('og_description', '')
+            bookmark.og_type = form.cleaned_data.get('og_type', '')
+            bookmark.og_site_name = form.cleaned_data.get('og_site_name', '')
+            bookmark.favicon_url = form.cleaned_data.get('favicon_url', '')
+            
+            # OGP画像の処理
+            og_image_url = form.cleaned_data.get('og_image', '')
+            if og_image_url:
+                try:
+                    # 画像URLを絶対URLに変換
+                    if not og_image_url.startswith(('http://', 'https://')):
+                        og_image_url = urljoin(bookmark.url, og_image_url)
+                    
+                    # 画像をダウンロードして保存
+                    response = requests.get(og_image_url, timeout=10, verify=False)
+                    if response.status_code == 200:
+                        image_name = og_image_url.split("/")[-1]
+                        if not image_name or '.' not in image_name:
+                            image_name = 'og_image.jpg'
+                        bookmark.og_image.save(image_name, ContentFile(response.content), save=False)
+                except Exception as e:
+                    print(f"Error downloading OGP image: {e}")
+            
+            bookmark.save()
 
             # 新規カテゴリの処理
             new_category = form.cleaned_data.get("new_category")
@@ -210,7 +238,38 @@ def quick_add_bookmark(request):
     if request.method == 'POST':
         form = BookmarkForm(request.POST)
         if form.is_valid():
-            bookmark = form.save()
+            bookmark = form.save(commit=False)
+            
+            # OGP情報を設定
+            bookmark.og_title = form.cleaned_data.get('og_title', '')
+            bookmark.og_description = form.cleaned_data.get('og_description', '')
+            bookmark.og_type = form.cleaned_data.get('og_type', '')
+            bookmark.og_site_name = form.cleaned_data.get('og_site_name', '')
+            bookmark.favicon_url = form.cleaned_data.get('favicon_url', '')
+            
+            # OGP画像の処理
+            og_image_url = form.cleaned_data.get('og_image', '')
+            if og_image_url:
+                try:
+                    import requests
+                    from urllib.parse import urljoin
+                    from django.core.files.base import ContentFile
+                    
+                    # 画像URLを絶対URLに変換
+                    if not og_image_url.startswith(('http://', 'https://')):
+                        og_image_url = urljoin(bookmark.url, og_image_url)
+                    
+                    # 画像をダウンロードして保存
+                    response = requests.get(og_image_url, timeout=10, verify=False)
+                    if response.status_code == 200:
+                        image_name = og_image_url.split("/")[-1]
+                        if not image_name or '.' not in image_name:
+                            image_name = 'og_image.jpg'
+                        bookmark.og_image.save(image_name, ContentFile(response.content), save=False)
+                except Exception as e:
+                    print(f"Error downloading OGP image: {e}")
+            
+            bookmark.save()
 
             # 新規カテゴリの処理
             new_category = form.cleaned_data.get("new_category")
