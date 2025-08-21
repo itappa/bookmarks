@@ -15,7 +15,7 @@ from .models import Category, Item, Tag
 
 
 class ItemListView(LoginRequiredMixin, ListView):
-    template_name = "bookmark/index.html"
+    template_name = "bookmark/card.html"
     model = Item
     context_object_name = "items"
     paginate_by = 12
@@ -51,75 +51,6 @@ def item_list_by_category(request, str):
     }
     context.update(get_common_data())
     return render(request, "bookmark/index.html", context)
-
-
-def add_bookmark(request):
-    initial_data = {}
-    if "url" in request.GET:
-        initial_data["url"] = request.GET["url"]
-    if "title" in request.GET:
-        initial_data["title"] = request.GET["title"]
-
-    if request.method == "POST":
-        form = BookmarkForm(request.POST)
-        if form.is_valid():
-            bookmark = form.save(commit=False)
-            
-            # OGP情報を設定
-            bookmark.og_title = form.cleaned_data.get('og_title', '')
-            bookmark.og_description = form.cleaned_data.get('og_description', '')
-            bookmark.og_type = form.cleaned_data.get('og_type', '')
-            bookmark.og_site_name = form.cleaned_data.get('og_site_name', '')
-            bookmark.favicon_url = form.cleaned_data.get('favicon_url', '')
-            
-            # OGP画像の処理
-            og_image_url = form.cleaned_data.get('og_image', '')
-            if og_image_url:
-                try:
-                    # 画像URLを絶対URLに変換
-                    if not og_image_url.startswith(('http://', 'https://')):
-                        og_image_url = urljoin(bookmark.url, og_image_url)
-                    
-                    # 画像をダウンロードして保存
-                    response = requests.get(og_image_url, timeout=10, verify=False)
-                    if response.status_code == 200:
-                        image_name = og_image_url.split("/")[-1]
-                        if not image_name or '.' not in image_name:
-                            image_name = 'og_image.jpg'
-                        bookmark.og_image.save(image_name, ContentFile(response.content), save=False)
-                except Exception as e:
-                    print(f"Error downloading OGP image: {e}")
-            
-            bookmark.save()
-
-            # 新規カテゴリの処理
-            new_category = form.cleaned_data.get("new_category")
-            if new_category:
-                category, created = Category.objects.get_or_create(name=new_category)
-                bookmark.category = category
-
-            # tagsの処理
-            tags = form.cleaned_data.get("tags")
-            if tags:
-                bookmark.tags.set(tags)
-
-            # 新規タグの処理
-            new_tags = form.cleaned_data.get("new_tags")
-            if new_tags:
-                tags = [tag.strip() for tag in new_tags.split(",")]
-                for tag_name in tags:
-                    tag, created = Tag.objects.get_or_create(name=tag_name)
-                    bookmark.tags.add(tag)
-            bookmark.save()
-
-            return redirect("bookmark:index")
-    else:
-        form = BookmarkForm(initial=initial_data)
-
-    context = {"form": form}
-    context.update(get_common_data())
-    return render(request, "bookmark/add_bookmark.html", context)
-
 
 def edit_view(request, pk):
     obj = get_object_or_404(Item, pk=pk)
@@ -263,7 +194,12 @@ def fetch_ogp_data(request):
 
 
 def quick_add_bookmark(request):
-    """URLのみ入力できるブックマーク登録ページ"""
+    initial_data = {}
+    if "url" in request.GET:
+        initial_data["url"] = request.GET["url"]
+    if "title" in request.GET:
+        initial_data["title"] = request.GET["title"]
+
     if request.method == 'POST':
         form = BookmarkForm(request.POST)
         if form.is_valid():
@@ -322,7 +258,7 @@ def quick_add_bookmark(request):
 
             return redirect("bookmark:index")
     else:
-        form = BookmarkForm()
+        form = BookmarkForm(initial=initial_data)
 
     context = {"form": form}
     context.update(get_common_data())

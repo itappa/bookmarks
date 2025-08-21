@@ -1,4 +1,6 @@
+import os
 from urllib.parse import urljoin
+from uuid import uuid4
 
 import requests
 from bs4 import BeautifulSoup
@@ -27,7 +29,14 @@ class Tag(models.Model):
 
     def __str__(self) -> str:
         return self.name
-
+    
+def upload_to_factory(folder):
+    def upload_to(instance, filename):
+        _, ext = os.path.splitext(filename)
+        ext = ext.lower()
+        filename = f"{uuid4()}{ext}"
+        return f"media/images/bookmark/{folder}/{filename}"
+    return upload_to
 
 class Item(models.Model):
     url = models.URLField(max_length=2000)
@@ -38,13 +47,13 @@ class Item(models.Model):
     created_at = models.DateTimeField("登録日時", auto_now_add=True)
 
     # ファビコン関連
-    favicon = models.ImageField(upload_to="favicons/", blank=True, null=True)
+    favicon = models.ImageField(upload_to=upload_to_factory("favicons"), blank=True, null=True)
     favicon_url = models.URLField(max_length=255, blank=True)
 
     # OGP関連
     og_title = models.CharField(max_length=512, blank=True)
     og_description = models.TextField(blank=True)
-    og_image = models.ImageField(upload_to="og_images/", blank=True, null=True)
+    og_image = models.ImageField(upload_to=upload_to_factory("og_images"), blank=True, null=True)
     og_type = models.CharField(max_length=50, blank=True)
     og_site_name = models.CharField(max_length=512, blank=True)
 
