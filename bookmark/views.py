@@ -182,12 +182,39 @@ def fetch_ogp_data(request):
                 url = 'https://' + url
             
             # メタデータを取得
-            response = requests.get(url, timeout=10, verify=False)
-            soup = BeautifulSoup(response.text, 'html.parser')
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            response = requests.get(url, timeout=10, verify=False, headers=headers)
+            
+            # エンコーディングを適切に処理
+            if response.encoding == 'ISO-8859-1':
+                # ISO-8859-1の場合はUTF-8として扱うことが多い
+                response.encoding = 'utf-8'
+            
+            # エンコーディングが不明な場合はUTF-8を試す
+            if not response.encoding or response.encoding.lower() == 'iso-8859-1':
+                try:
+                    content = response.content.decode('utf-8')
+                except UnicodeDecodeError:
+                    # UTF-8でデコードできない場合は、他のエンコーディングを試す
+                    for encoding in ['shift_jis', 'euc-jp', 'iso-2022-jp', 'cp932']:
+                        try:
+                            content = response.content.decode(encoding)
+                            break
+                        except UnicodeDecodeError:
+                            continue
+                    else:
+                        # すべて失敗した場合はUTF-8で強制デコード（エラーを無視）
+                        content = response.content.decode('utf-8', errors='ignore')
+            else:
+                content = response.text
+            
+            soup = BeautifulSoup(content, 'html.parser', from_encoding='utf-8')
             
             # 基本情報
             title = soup.find('title')
-            title_text = title.get_text() if title else ''
+            title_text = title.get_text(strip=True) if title else ''
             
             # OGP情報
             og_data = {}
@@ -199,7 +226,9 @@ def fetch_ogp_data(request):
             for tag in og_tags:
                 meta = soup.find('meta', property=tag)
                 if meta and meta.get('content'):
-                    og_data[tag.replace('og:', '')] = meta.get('content')
+                    content = meta.get('content', '').strip()
+                    if content:
+                        og_data[tag.replace('og:', '')] = content
             
             # ファビコン
             favicon = soup.find("link", rel="icon") or soup.find("link", rel="shortcut icon")
@@ -208,11 +237,11 @@ def fetch_ogp_data(request):
                 favicon_url = urljoin(url, favicon['href'])
             
             # 説明文（OGP descriptionがない場合はmeta descriptionを使用）
-            description = og_data.get('description', '')
+            description = og_data.get('description', '').strip()
             if not description:
                 meta_desc = soup.find('meta', attrs={'name': 'description'})
                 if meta_desc:
-                    description = meta_desc.get('content', '')
+                    description = meta_desc.get('content', '').strip()
             
             result = {
                 'url': url,
