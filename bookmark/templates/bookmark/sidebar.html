@@ -1,19 +1,13 @@
 {% extends "components/sidebar_base.html" %}
-{% load mptt_tags %}
 {% block sidebar_content %}
-  {% recursetree category_list %}
+  {% for category in category_list %}
   <li>
-    <a href="{% url 'bookmark:item_list_by_category' node.name %}"
+    <a href="{% url 'bookmark:item_list_by_category' category.name %}"
        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-      <span class="flex-1">{{ node.name }}</span>
+      <span class="flex-1">{{ category.name }}</span>
     </a>
-    {% if not node.is_leaf_node %}
-      <ul class="ms-4">
-        {{ children }}
-      </ul>
-    {% endif %}
   </li>
-{% endrecursetree %}
+  {% endfor %}
 <li>
   <hr>
 </li>
