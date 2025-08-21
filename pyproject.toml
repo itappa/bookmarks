@@ -27,7 +27,7 @@ dependencies = [
     "django-celery-results==2.5.1",
     "django-cleanup==9.0.0",
     "django-debug-toolbar==4.4.6",
-    "django-environ>=0.12.0",
+    "django-environ==0.12.0",
     "django-ffmpeg==0.1.7",
     "django-filter==24.3",
     "django-import-export==4.1.1",
