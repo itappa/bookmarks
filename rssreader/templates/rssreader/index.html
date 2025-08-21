@@ -1,0 +1,40 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+  RSS Reader
+{% endblock title %}
+
+{% block content %}
+  <div class="max-w-3xl mx-auto p-4">
+    <h1 class="text-2xl font-semibold mb-4">RSS Reader</h1>
+    <form method="post" class="mb-6">
+      {% csrf_token %}
+      <div class="flex gap-2">
+        <input type="url" name="url" placeholder="Feed URL" required class="w-full p-2 border rounded">
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Fetch</button>
+      </div>
+    </form>
+
+    {% if error %}
+      <div class="p-3 bg-red-100 text-red-700 rounded mb-4">{{ error }}</div>
+    {% endif %}
+
+    {% if feed %}
+      <div class="mb-4">
+        <h2 class="text-xl font-medium">{{ feed.title }}</h2>
+        <p class="text-gray-600">{{ feed.description }}</p>
+      </div>
+      <ul class="space-y-3">
+        {% for item in feed.items %}
+          <li class="p-3 border rounded">
+            <a href="{{ item.link }}" target="_blank" class="text-blue-600 hover:underline">{{ item.title }}</a>
+            {% if item.description %}
+              <p class="text-sm text-gray-600 mt-1">{{ item.description|safe }}</p>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+{% endblock content %}
+

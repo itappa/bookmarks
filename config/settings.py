@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     # myApps
     "accounts.apps.AccountsConfig",
     "bookmark.apps.BookmarkConfig",
+    "rssreader.apps.RssreaderConfig",
     
     # default
     'django.contrib.admin',
