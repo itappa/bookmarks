@@ -1,0 +1,203 @@
+{% extends 'inquiry/base.html' %}
+
+{% block title %}問い合わせ一覧 - 問い合わせ管理システム{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- ヘッダー -->
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">問い合わせ一覧</h1>
+            <p class="mt-1 text-sm text-gray-500">
+                総件数: {{ total_inquiries }} | 新規: {{ new_inquiries }} | 対応中: {{ in_progress_inquiries }} | 緊急: {{ urgent_inquiries }}
+            </p>
+        </div>
+        <a href="{% url 'inquiry:inquiry_create' %}" 
+           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+            <i class="fas fa-plus mr-2"></i>新規作成
+        </a>
+    </div>
+
+    <!-- 検索フォーム -->
+    <div class="bg-white shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                <i class="fas fa-search mr-2"></i>検索・フィルター
+            </h3>
+            <form method="get" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                    {{ search_form.q.label_tag }}
+                    {{ search_form.q }}
+                </div>
+                <div>
+                    {{ search_form.status.label_tag }}
+                    {{ search_form.status }}
+                </div>
+                <div>
+                    {{ search_form.priority.label_tag }}
+                    {{ search_form.priority }}
+                </div>
+                <div>
+                    {{ search_form.category.label_tag }}
+                    {{ search_form.category }}
+                </div>
+                <div>
+                    {{ search_form.assigned_to.label_tag }}
+                    {{ search_form.assigned_to }}
+                </div>
+                <div>
+                    {{ search_form.date_from.label_tag }}
+                    {{ search_form.date_from }}
+                </div>
+                <div>
+                    {{ search_form.date_to.label_tag }}
+                    {{ search_form.date_to }}
+                </div>
+                <div class="flex items-end space-x-2">
+                    <button type="submit" 
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                        <i class="fas fa-search mr-2"></i>検索
+                    </button>
+                    <a href="{% url 'inquiry:inquiry_list' %}" 
+                       class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        <i class="fas fa-times mr-2"></i>クリア
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 問い合わせ一覧 -->
+    <div class="bg-white shadow overflow-hidden sm:rounded-md">
+        {% if inquiries %}
+            <ul class="divide-y divide-gray-200">
+                {% for inquiry in inquiries %}
+                    <li>
+                        <div class="px-4 py-4 sm:px-6">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-indigo-600 truncate">
+                                            <a href="{% url 'inquiry:inquiry_detail' inquiry.pk %}" class="hover:text-indigo-500">
+                                                {{ inquiry.title }}
+                                            </a>
+                                        </p>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status-{{ inquiry.status }}">
+                                                {{ inquiry.get_status_display }}
+                                            </span>
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium priority-{{ inquiry.priority }}">
+                                                {{ inquiry.get_priority_display }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2 flex items-center justify-between">
+                                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                            <span><i class="fas fa-user mr-1"></i>{{ inquiry.customer_name }}</span>
+                                            {% if inquiry.category %}
+                                                <span><i class="fas fa-tag mr-1"></i>{{ inquiry.category.name }}</span>
+                                            {% endif %}
+                                            {% if inquiry.assigned_to %}
+                                                <span><i class="fas fa-user-tie mr-1"></i>{{ inquiry.assigned_to.get_full_name|default:inquiry.assigned_to.username }}</span>
+                                            {% endif %}
+                                            <span><i class="fas fa-clock mr-1"></i>{{ inquiry.created_at|date:"Y/m/d H:i" }}</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            {% if inquiry.responses.count > 0 %}
+                                                <span class="text-xs text-gray-400">
+                                                    <i class="fas fa-comments mr-1"></i>{{ inquiry.responses.count }}件の対応
+                                                </span>
+                                            {% endif %}
+                                            <div class="flex items-center space-x-1">
+                                                <a href="{% url 'inquiry:inquiry_detail' inquiry.pk %}" 
+                                                   class="text-indigo-600 hover:text-indigo-900 text-sm">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{% url 'inquiry:inquiry_update' inquiry.pk %}" 
+                                                   class="text-gray-600 hover:text-gray-900 text-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="px-4 py-8 text-center">
+                <i class="fas fa-inbox text-4xl text-gray-300 mb-4"></i>
+                <p class="text-gray-500">問い合わせがありません。</p>
+                <a href="{% url 'inquiry:inquiry_create' %}" 
+                   class="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                    <i class="fas fa-plus mr-2"></i>最初の問い合わせを作成
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- ページネーション -->
+    {% if is_paginated %}
+        <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+            <div class="flex-1 flex justify-between sm:hidden">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        前へ
+                    </a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                       class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        次へ
+                    </a>
+                {% endif %}
+            </div>
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm text-gray-700">
+                        <span class="font-medium">{{ page_obj.start_index }}</span>
+                        から
+                        <span class="font-medium">{{ page_obj.end_index }}</span>
+                        まで表示（全
+                        <span class="font-medium">{{ page_obj.paginator.count }}</span>
+                        件中）
+                    </p>
+                </div>
+                <div>
+                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        {% if page_obj.has_previous %}
+                            <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                               class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-indigo-50 text-sm font-medium text-indigo-600">
+                                    {{ num }}
+                                </span>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <a href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                                   class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                    {{ num }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                               class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        {% endif %}
+                    </nav>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
