@@ -1,0 +1,264 @@
+{% extends 'inquiry/base.html' %}
+
+{% block title %}{{ inquiry.title }} - 問い合わせ管理システム{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- ヘッダー -->
+    <div class="flex justify-between items-start">
+        <div class="flex-1">
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'inquiry:inquiry_list' %}" 
+                   class="text-indigo-600 hover:text-indigo-500">
+                    <i class="fas fa-arrow-left"></i> 一覧に戻る
+                </a>
+                <h1 class="text-2xl font-bold text-gray-900">{{ inquiry.title }}</h1>
+            </div>
+            <div class="mt-2 flex items-center space-x-4 text-sm text-gray-500">
+                <span><i class="fas fa-user mr-1"></i>{{ inquiry.customer_name }}</span>
+                <span><i class="fas fa-envelope mr-1"></i>{{ inquiry.customer_email }}</span>
+                {% if inquiry.customer_phone %}
+                    <span><i class="fas fa-phone mr-1"></i>{{ inquiry.customer_phone }}</span>
+                {% endif %}
+                <span><i class="fas fa-clock mr-1"></i>{{ inquiry.created_at|date:"Y/m/d H:i" }}</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <a href="{% url 'inquiry:inquiry_update' inquiry.pk %}" 
+               class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                <i class="fas fa-edit mr-2"></i>編集
+            </a>
+            <a href="{% url 'inquiry:inquiry_delete' inquiry.pk %}" 
+               class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
+                <i class="fas fa-trash mr-2"></i>削除
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- メインコンテンツ -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- 問い合わせ内容 -->
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                        <i class="fas fa-file-alt mr-2"></i>問い合わせ内容
+                    </h3>
+                    <div class="prose max-w-none">
+                        <p class="whitespace-pre-wrap">{{ inquiry.content }}</p>
+                    </div>
+                    {% if inquiry.tags %}
+                        <div class="mt-4">
+                            <h4 class="text-sm font-medium text-gray-900 mb-2">タグ</h4>
+                            <div class="flex flex-wrap gap-2">
+                                {% for tag in inquiry.tags.split ',' %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        {{ tag.strip }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- 対応履歴 -->
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                        <i class="fas fa-comments mr-2"></i>対応履歴
+                    </h3>
+                    
+                    <!-- 新規対応追加フォーム -->
+                    <form method="post" class="mb-6">
+                        {% csrf_token %}
+                        <div class="space-y-4">
+                            <div>
+                                {{ response_form.content.label_tag }}
+                                {{ response_form.content }}
+                            </div>
+                            <div class="flex items-center">
+                                {{ response_form.is_internal }}
+                                <label for="{{ response_form.is_internal.id_for_label }}" class="ml-2 text-sm text-gray-700">
+                                    {{ response_form.is_internal.label }}
+                                </label>
+                            </div>
+                            <div>
+                                <button type="submit" 
+                                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                                    <i class="fas fa-plus mr-2"></i>対応を追加
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- 対応履歴一覧 -->
+                    {% if responses %}
+                        <div class="space-y-4">
+                            {% for response in responses %}
+                                <div class="border-l-4 {% if response.is_internal %}border-gray-400{% else %}border-indigo-400{% endif %} pl-4 py-2">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-sm font-medium text-gray-900">
+                                                {{ response.responder.get_full_name|default:response.responder.username }}
+                                            </span>
+                                            {% if response.is_internal %}
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                    <i class="fas fa-eye-slash mr-1"></i>内部メモ
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <span class="text-sm text-gray-500">{{ response.created_at|date:"Y/m/d H:i" }}</span>
+                                    </div>
+                                    <div class="prose max-w-none">
+                                        <p class="whitespace-pre-wrap text-sm text-gray-700">{{ response.content }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-gray-500 text-sm">対応履歴がありません。</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- サイドバー -->
+        <div class="space-y-6">
+            <!-- ステータス・優先度 -->
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                        <i class="fas fa-info-circle mr-2"></i>基本情報
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">ステータス</label>
+                            <select id="status-select" class="form-control">
+                                {% for value, label in inquiry.STATUS_CHOICES %}
+                                    <option value="{{ value }}" {% if inquiry.status == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">優先度</label>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium priority-{{ inquiry.priority }}">
+                                {{ inquiry.get_priority_display }}
+                            </span>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">カテゴリ</label>
+                            <span class="text-sm text-gray-900">
+                                {% if inquiry.category %}
+                                    {{ inquiry.category.name }}
+                                {% else %}
+                                    未分類
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">担当者</label>
+                            <select id="assignee-select" class="form-control">
+                                <option value="">未割り当て</option>
+                                {% for user in assignees %}
+                                    <option value="{{ user.id }}" {% if inquiry.assigned_to == user %}selected{% endif %}>
+                                        {{ user.get_full_name|default:user.username }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 関連ナレッジ -->
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                        <i class="fas fa-book mr-2"></i>関連ナレッジ
+                    </h3>
+                    <div class="space-y-2">
+                        <a href="{% url 'inquiry:knowledge_create' %}" 
+                           class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                            <i class="fas fa-plus mr-2"></i>ナレッジ作成
+                        </a>
+                        <a href="{% url 'inquiry:knowledge_list' %}" 
+                           class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            <i class="fas fa-search mr-2"></i>ナレッジ検索
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 添付ファイル -->
+            {% if inquiry.attachments.exists %}
+                <div class="bg-white shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                            <i class="fas fa-paperclip mr-2"></i>添付ファイル
+                        </h3>
+                        <div class="space-y-2">
+                            {% for attachment in inquiry.attachments.all %}
+                                <div class="flex items-center justify-between p-2 border rounded">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-file mr-2 text-gray-400"></i>
+                                        <span class="text-sm text-gray-900">{{ attachment.filename }}</span>
+                                    </div>
+                                    <a href="{{ attachment.file.url }}" 
+                                       class="text-indigo-600 hover:text-indigo-500 text-sm">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // ステータス更新
+    $('#status-select').change(function() {
+        var newStatus = $(this).val();
+        $.ajax({
+            url: '{% url "inquiry:inquiry_status_update" inquiry.pk %}',
+            method: 'POST',
+            data: {
+                'status': newStatus,
+                'csrfmiddlewaretoken': getCookie('csrftoken')
+            },
+            success: function(response) {
+                if (response.success) {
+                    // 成功時の処理（必要に応じて）
+                }
+            }
+        });
+    });
+
+    // 担当者割り当て
+    $('#assignee-select').change(function() {
+        var assigneeId = $(this).val();
+        $.ajax({
+            url: '{% url "inquiry:inquiry_assign" inquiry.pk %}',
+            method: 'POST',
+            data: {
+                'assignee_id': assigneeId,
+                'csrfmiddlewaretoken': getCookie('csrftoken')
+            },
+            success: function(response) {
+                if (response.success) {
+                    // 成功時の処理（必要に応じて）
+                }
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

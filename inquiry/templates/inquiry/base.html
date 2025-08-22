@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}問い合わせ管理システム{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        .status-new { @apply bg-blue-100 text-blue-800; }
+        .status-in_progress { @apply bg-yellow-100 text-yellow-800; }
+        .status-waiting { @apply bg-gray-100 text-gray-800; }
+        .status-resolved { @apply bg-green-100 text-green-800; }
+        .status-closed { @apply bg-purple-100 text-purple-800; }
+        
+        .priority-low { @apply bg-gray-100 text-gray-800; }
+        .priority-medium { @apply bg-blue-100 text-blue-800; }
+        .priority-high { @apply bg-orange-100 text-orange-800; }
+        .priority-urgent { @apply bg-red-100 text-red-800; }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="{% url 'inquiry:dashboard' %}" class="text-xl font-bold text-gray-800">
+                            <i class="fas fa-headset mr-2"></i>問い合わせ管理
+                        </a>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="{% url 'inquiry:dashboard' %}" 
+                           class="{% if request.resolver_match.url_name == 'dashboard' %}border-indigo-500 text-gray-900{% else %}border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700{% endif %} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            <i class="fas fa-tachometer-alt mr-1"></i>ダッシュボード
+                        </a>
+                        <a href="{% url 'inquiry:inquiry_list' %}" 
+                           class="{% if 'inquiry' in request.resolver_match.url_name %}border-indigo-500 text-gray-900{% else %}border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700{% endif %} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            <i class="fas fa-envelope mr-1"></i>問い合わせ
+                        </a>
+                        <a href="{% url 'inquiry:knowledge_list' %}" 
+                           class="{% if 'knowledge' in request.resolver_match.url_name %}border-indigo-500 text-gray-900{% else %}border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700{% endif %} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            <i class="fas fa-book mr-1"></i>ナレッジ
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    {% if user.is_authenticated %}
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-gray-700">{{ user.get_full_name|default:user.username }}</span>
+                            <a href="{% url 'account_logout' %}" class="text-sm text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-sign-out-alt"></i> ログアウト
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="max-w-7xl mx-auto px-4 py-2">
+            {% for message in messages %}
+                <div class="mb-2 p-4 rounded-md {% if message.tags == 'success' %}bg-green-100 text-green-800{% elif message.tags == 'error' %}bg-red-100 text-red-800{% elif message.tags == 'warning' %}bg-yellow-100 text-yellow-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="max-w-7xl mx-auto py-4 px-4 text-center text-sm text-gray-500">
+            &copy; 2024 問い合わせ管理システム
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // CSRF Token for AJAX requests
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Auto-hide messages after 5 seconds
+        setTimeout(function() {
+            $('.mb-2').fadeOut();
+        }, 5000);
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

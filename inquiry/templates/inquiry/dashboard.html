@@ -1,0 +1,237 @@
+{% extends 'inquiry/base.html' %}
+
+{% block title %}ダッシュボード - 問い合わせ管理システム{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- 統計カード -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-envelope text-3xl text-blue-600"></i>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">総問い合わせ数</dt>
+                            <dd class="text-lg font-medium text-gray-900">{{ total_inquiries }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-plus-circle text-3xl text-green-600"></i>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">新規問い合わせ</dt>
+                            <dd class="text-lg font-medium text-gray-900">{{ new_inquiries }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-clock text-3xl text-yellow-600"></i>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">対応中</dt>
+                            <dd class="text-lg font-medium text-gray-900">{{ in_progress_inquiries }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-3xl text-red-600"></i>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">緊急問い合わせ</dt>
+                            <dd class="text-lg font-medium text-gray-900">{{ urgent_inquiries }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- 最近の問い合わせ -->
+        <div class="bg-white shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                    <i class="fas fa-history mr-2"></i>最近の問い合わせ
+                </h3>
+                {% if recent_inquiries %}
+                    <div class="space-y-3">
+                        {% for inquiry in recent_inquiries %}
+                            <div class="border-l-4 border-gray-200 pl-4 py-2">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex-1">
+                                        <a href="{% url 'inquiry:inquiry_detail' inquiry.pk %}" 
+                                           class="text-sm font-medium text-gray-900 hover:text-indigo-600">
+                                            {{ inquiry.title }}
+                                        </a>
+                                        <p class="text-sm text-gray-500">{{ inquiry.customer_name }}</p>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status-{{ inquiry.status }}">
+                                            {{ inquiry.get_status_display }}
+                                        </span>
+                                        <span class="text-xs text-gray-400">
+                                            {{ inquiry.created_at|date:"m/d H:i" }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-4">
+                        <a href="{% url 'inquiry:inquiry_list' %}" 
+                           class="text-sm text-indigo-600 hover:text-indigo-500">
+                            すべての問い合わせを見る <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 text-sm">問い合わせがありません。</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 最近のナレッジ -->
+        <div class="bg-white shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                    <i class="fas fa-book mr-2"></i>最近のナレッジ
+                </h3>
+                {% if recent_knowledge %}
+                    <div class="space-y-3">
+                        {% for knowledge in recent_knowledge %}
+                            <div class="border-l-4 border-gray-200 pl-4 py-2">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex-1">
+                                        <a href="{% url 'inquiry:knowledge_detail' knowledge.pk %}" 
+                                           class="text-sm font-medium text-gray-900 hover:text-indigo-600">
+                                            {{ knowledge.title }}
+                                        </a>
+                                        <p class="text-sm text-gray-500">{{ knowledge.author.get_full_name|default:knowledge.author.username }}</p>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        {% if knowledge.is_public %}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                公開
+                                            </span>
+                                        {% else %}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                非公開
+                                            </span>
+                                        {% endif %}
+                                        <span class="text-xs text-gray-400">
+                                            {{ knowledge.updated_at|date:"m/d H:i" }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-4">
+                        <a href="{% url 'inquiry:knowledge_list' %}" 
+                           class="text-sm text-indigo-600 hover:text-indigo-500">
+                            すべてのナレッジを見る <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 text-sm">ナレッジがありません。</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- カテゴリ別統計 -->
+        <div class="bg-white shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                    <i class="fas fa-chart-pie mr-2"></i>カテゴリ別統計
+                </h3>
+                {% if category_stats %}
+                    <div class="space-y-3">
+                        {% for category in category_stats %}
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-900">{{ category.name }}</span>
+                                <span class="text-sm font-medium text-gray-900">{{ category.inquiry_count }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 text-sm">カテゴリがありません。</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 担当者別統計 -->
+        <div class="bg-white shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                    <i class="fas fa-users mr-2"></i>担当者別統計
+                </h3>
+                {% if assignee_stats %}
+                    <div class="space-y-3">
+                        {% for assignee in assignee_stats %}
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-900">{{ assignee.get_full_name|default:assignee.username }}</span>
+                                <span class="text-sm font-medium text-gray-900">{{ assignee.assigned_count }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 text-sm">担当者がいません。</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- クイックアクション -->
+    <div class="bg-white shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                <i class="fas fa-bolt mr-2"></i>クイックアクション
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <a href="{% url 'inquiry:inquiry_create' %}" 
+                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                    <i class="fas fa-plus mr-2"></i>新規問い合わせ
+                </a>
+                <a href="{% url 'inquiry:knowledge_create' %}" 
+                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                    <i class="fas fa-book-medical mr-2"></i>ナレッジ作成
+                </a>
+                <a href="{% url 'inquiry:inquiry_list' %}?status=new" 
+                   class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    <i class="fas fa-eye mr-2"></i>新規確認
+                </a>
+                <a href="{% url 'inquiry:inquiry_list' %}?priority=urgent" 
+                   class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>緊急対応
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

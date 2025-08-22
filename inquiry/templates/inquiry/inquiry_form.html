@@ -1,0 +1,153 @@
+{% extends 'inquiry/base.html' %}
+
+{% block title %}
+    {% if object %}問い合わせ編集{% else %}新規問い合わせ作成{% endif %} - 問い合わせ管理システム
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- ヘッダー -->
+    <div class="mb-6">
+        <div class="flex items-center space-x-4">
+            <a href="{% url 'inquiry:inquiry_list' %}" 
+               class="text-indigo-600 hover:text-indigo-500">
+                <i class="fas fa-arrow-left"></i> 一覧に戻る
+            </a>
+            <h1 class="text-2xl font-bold text-gray-900">
+                {% if object %}
+                    <i class="fas fa-edit mr-2"></i>問い合わせ編集
+                {% else %}
+                    <i class="fas fa-plus mr-2"></i>新規問い合わせ作成
+                {% endif %}
+            </h1>
+        </div>
+    </div>
+
+    <!-- フォーム -->
+    <div class="bg-white shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- 基本情報 -->
+                <div>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                        <i class="fas fa-info-circle mr-2"></i>基本情報
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            {{ form.title.label_tag }}
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.title.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {{ form.category.label_tag }}
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.category.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        {{ form.content.label_tag }}
+                        {{ form.content }}
+                        {% if form.content.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.content.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="mt-4">
+                        {{ form.tags.label_tag }}
+                        {{ form.tags }}
+                        {% if form.tags.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.tags.errors.0 }}</p>
+                        {% endif %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.tags.help_text }}</p>
+                    </div>
+                </div>
+
+                <!-- 顧客情報 -->
+                <div>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                        <i class="fas fa-user mr-2"></i>顧客情報
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            {{ form.customer_name.label_tag }}
+                            {{ form.customer_name }}
+                            {% if form.customer_name.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.customer_name.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {{ form.customer_email.label_tag }}
+                            {{ form.customer_email }}
+                            {% if form.customer_email.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.customer_email.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        {{ form.customer_phone.label_tag }}
+                        {{ form.customer_phone }}
+                        {% if form.customer_phone.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.customer_phone.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- 管理情報 -->
+                <div>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                        <i class="fas fa-cog mr-2"></i>管理情報
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            {{ form.priority.label_tag }}
+                            {{ form.priority }}
+                            {% if form.priority.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.priority.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        {% if form.status %}
+                            <div>
+                                {{ form.status.label_tag }}
+                                {{ form.status }}
+                                {% if form.status.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ form.status.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if form.assigned_to %}
+                        <div class="mt-4">
+                            {{ form.assigned_to.label_tag }}
+                            {{ form.assigned_to }}
+                            {% if form.assigned_to.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.assigned_to.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- ボタン -->
+                <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                    <a href="{% url 'inquiry:inquiry_list' %}" 
+                       class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        <i class="fas fa-times mr-2"></i>キャンセル
+                    </a>
+                    <button type="submit" 
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                        {% if object %}
+                            <i class="fas fa-save mr-2"></i>更新
+                        {% else %}
+                            <i class="fas fa-plus mr-2"></i>作成
+                        {% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
