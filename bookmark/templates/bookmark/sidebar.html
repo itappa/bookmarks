@@ -1,53 +1,73 @@
-{% extends "components/sidebar_base.html" %}
-{% block sidebar_content %}
-  {% for category in category_list %}
-    <li>
-      <a href="{% url 'bookmark:item_list_by_category' category.name %}"
-         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-        <span class="flex-1">{{ category.name }}</span>
-      </a>
-    </li>
-  {% endfor %}
-  <li>
-    <hr>
-  </li>
-  <li>
-    <a href="{% url 'bookmark:quick_add_bookmark' %}"
-       class="flex items-center p-2 text-gray-600 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-      <svg xmlns="http://www.w3.org/2000/svg"
-           width="24"
-           height="24"
-           viewBox="0 0 24 24"
-           fill="none"
-           stroke="currentColor"
-           stroke-width="2"
-           stroke-linecap="round"
-           stroke-linejoin="round"
-           class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-        <path d="M12 5l0 14" />
-        <path d="M5 12l14 0" />
-      </svg>
-      <span class="ms-3">ブックマーク追加</span>
-    </a>
-  </li>
-  <li>
-    <a href="{% url 'bookmark:list' %}"
-       class="flex items-center p-2 text-gray-600 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-      <svg xmlns="http://www.w3.org/2000/svg"
-           width="24"
-           height="24"
-           viewBox="0 0 24 24"
-           fill="none"
-           stroke="currentColor"
-           stroke-width="2"
-           stroke-linecap="round"
-           stroke-linejoin="round"
-           class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-back">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-        <path d="M9 11l-4 4l4 4m-4 -4h11a4 4 0 0 0 0 -8h-1" />
-      </svg>
-      <span class="ms-3">TOP</span>
-    </a>
-  </li>
-{% endblock sidebar_content %}
+<button data-drawer-target="default-sidebar"
+        data-drawer-toggle="default-sidebar"
+        aria-controls="default-sidebar"
+        type="button"
+        class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+  <span class="sr-only">Open sidebar</span>
+  <svg class="w-6 h-6"
+       aria-hidden="true"
+       fill="currentColor"
+       viewBox="0 0 20 20"
+       xmlns="http://www.w3.org/2000/svg">
+    <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+    </path>
+  </svg>
+</button>
+<aside id="default-sidebar"
+       class="fixed top-16 z-40 w-64 p-4 h-screen bg-stone-100 border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 transition-transform -translate-x-full lg:translate-x-0"
+       aria-label="Sidebar">
+  <div class="h-full px-3 pb-4 overflow-y-auto">
+    <ul class="space-y-2 font-medium">
+      <li>
+        <a href="{% url 'bookmark:quick_add_bookmark' %}"
+           class="flex items-center p-2 text-gray-600 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M12 5l0 14" />
+            <path d="M5 12l14 0" />
+          </svg>
+          <span class="ms-3">Add</span>
+        </a>
+      </li>
+      {% for category in category_list %}
+        <li>
+          <a href="{% url 'bookmark:item_list_by_category' category.name %}"
+             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+            <span class="flex-1">{{ category.name }}</span>
+          </a>
+        </li>
+      {% endfor %}
+      <li>
+        <hr>
+      </li>
+      <li>
+        <a href="{% url 'bookmark:list' %}"
+           class="flex items-center p-2 text-gray-600 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-back">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M9 11l-4 4l4 4m-4 -4h11a4 4 0 0 0 0 -8h-1" />
+          </svg>
+          <span class="ms-3">TOP</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>

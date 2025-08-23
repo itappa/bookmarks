@@ -11,8 +11,6 @@
     {% else %}
       <link href="{% static 'dist/tailwind.min.css' %}" rel="stylesheet" />
     {% endif %}
-    <link href="{% static 'vendor/videojs/video-js.min.css' %}"
-          rel="stylesheet" />
     <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
     {% block head %}
     {% endblock head %}
@@ -24,22 +22,16 @@
   </head>
   <body class="mx-auto flex min-h-screen flex-col justify-between dark:bg-gray-900">
     {% block navbar %}
-      {% include "layouts/navbar.html" %}
+      {% include "includes/navbar.html" %}
     {% endblock navbar %}
     {% block sidebar %}
     {% endblock sidebar %}
-    <div class="grow sm:p-4 lg:ml-64">
-      {% block content %}
-      {% endblock content %}
-    </div>
-    <div class="lg:ml-64">
-      {% block pagination %}
-      {% endblock pagination %}
-      {% include "layouts/footer.html" %}
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
-    <script src="{% static 'vendor/htmx/htmx.min.js' %}"></script>
-    <script src="{% static 'js/pagination.js' %}"></script>
+    {% block container %}
+      <div class="grow">
+        {% block content %}
+        {% endblock content %}
+      </div>
+    {% endblock container %}
     {% block script %}
     {% endblock script %}
   </body>

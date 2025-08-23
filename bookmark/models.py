@@ -29,31 +29,46 @@ class Tag(models.Model):
 
     def __str__(self) -> str:
         return self.name
-    
-def upload_to_factory(folder):
-    def upload_to(instance, filename):
-        _, ext = os.path.splitext(filename)
-        ext = ext.lower()
-        filename = f"{uuid4()}{ext}"
-        return f"media/images/bookmark/{folder}/{filename}"
-    return upload_to
+
+
+def upload_to_favicon(instance, filename):
+    _, ext = os.path.splitext(filename)
+    ext = ext.lower()
+    filename = f"{uuid4()}{ext}"
+    return f"media/images/bookmark/favicons/{filename}"
+
+
+def upload_to_og_image(instance, filename):
+    _, ext = os.path.splitext(filename)
+    ext = ext.lower()
+    filename = f"{uuid4()}{ext}"
+    return f"media/images/bookmark/og_images/{filename}"
+
 
 class Item(models.Model):
     url = models.URLField(max_length=2000)
     title = models.CharField(verbose_name="タイトル", max_length=512)
     description = models.TextField(blank=True)
-    category = models.ForeignKey(Category, verbose_name="カテゴリ", on_delete=models.SET_NULL, blank=True, null=True)
-    tags = models.ManyToManyField(Tag, verbose_name="タグ", related_name="tags", blank=True)
+    category = models.ForeignKey(
+        Category,
+        verbose_name="カテゴリ",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    tags = models.ManyToManyField(
+        Tag, verbose_name="タグ", related_name="tags", blank=True
+    )
     created_at = models.DateTimeField("登録日時", auto_now_add=True)
 
     # ファビコン関連
-    favicon = models.ImageField(upload_to=upload_to_factory("favicons"), blank=True, null=True)
+    favicon = models.ImageField(upload_to=upload_to_favicon, blank=True, null=True)
     favicon_url = models.URLField(max_length=255, blank=True)
 
     # OGP関連
     og_title = models.CharField(max_length=512, blank=True)
     og_description = models.TextField(blank=True)
-    og_image = models.ImageField(upload_to=upload_to_factory("og_images"), blank=True, null=True)
+    og_image = models.ImageField(upload_to=upload_to_og_image, blank=True, null=True)
     og_type = models.CharField(max_length=50, blank=True)
     og_site_name = models.CharField(max_length=512, blank=True)
 
@@ -67,7 +82,10 @@ class Item(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if not self.last_metadata_update or (timezone.now() - self.last_metadata_update).days >= 7:
+        if (
+            not self.last_metadata_update
+            or (timezone.now() - self.last_metadata_update).days >= 7
+        ):
             self.fetch_metadata()
             self.last_metadata_update = timezone.now()
         super().save(*args, **kwargs)
@@ -78,14 +96,18 @@ class Item(models.Model):
             soup = BeautifulSoup(response.text, "html.parser")
 
             # ファビコンの取得と保存
-            favicon = soup.find("link", rel="icon") or soup.find("link", rel="shortcut icon")
+            favicon = soup.find("link", rel="icon") or soup.find(
+                "link", rel="shortcut icon"
+            )
             print(favicon)
             if favicon:
                 favicon_url = urljoin(self.url, favicon["href"])
                 favicon_response = requests.get(favicon_url)
                 if favicon_response.status_code == 200:
                     favicon_name = favicon_url.split("/")[-1]
-                    self.favicon.save(favicon_name, ContentFile(favicon_response.content), save=False)
+                    self.favicon.save(
+                        favicon_name, ContentFile(favicon_response.content), save=False
+                    )
 
             # OGP情報の取得
             og_title = soup.find("meta", property="og:title")
@@ -103,7 +125,11 @@ class Item(models.Model):
                 og_image_response = requests.get(og_image_url)
                 if og_image_response.status_code == 200:
                     og_image_name = og_image_url.split("/")[-1]
-                    self.og_image.save(og_image_name, ContentFile(og_image_response.content), save=False)
+                    self.og_image.save(
+                        og_image_name,
+                        ContentFile(og_image_response.content),
+                        save=False,
+                    )
 
             og_type = soup.find("meta", property="og:type")
             if og_type:

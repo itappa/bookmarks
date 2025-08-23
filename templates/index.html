@@ -1,4 +1,4 @@
-{% extends "layouts/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% block title %}
   myApp - Home
@@ -38,9 +38,13 @@
      width="24px"
      fill="#5f6368"
      class="shrink-0 size-8 text-gray-800 mt-0.5 me-6 dark:text-neutral-200"><path d="M200-120v-640q0-33 23.5-56.5T280-840h400q33 0 56.5 23.5T760-760v640L480-240 200-120Zm80-122 200-86 200 86v-518H280v518Zm0-518h400-400Z" /></svg>' %}
-
       {% url 'rssreader:index' as rssreader_url %}
-      {% include "components/home_card.html" with url=rssreader_url title="RSS Reader" description="Parse and read RSS/Atom feeds." icon_svg='<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368" class="shrink-0 size-8 text-gray-800 mt-0.5 me-6 dark:text-neutral-200"><path d="M160-200q-17 0-28.5-11.5T120-240q0-17 11.5-28.5T160-280q17 0 28.5 11.5T200-240q0 17-11.5 28.5T160-200Zm240 0q0-83-31.5-156T281-488q-46-46-104-77t-128-39v-81q86 9 160.5 44.5T340-561q57 57 92.5 131.5T477-240h-77Zm240 0q0-116-44-217.5T469-588q-85-85-186.5-129T64-760v-80q142 9 264.5 66.5T548-580q103 103 160.5 225.5T776-80h-80Z"/></svg>' %}
+      {% include "components/home_card.html" with url=rssreader_url title="RSS Reader" description="Parse and read RSS/Atom feeds." icon_svg='<svg xmlns="http://www.w3.org/2000/svg"
+     height="24px"
+     viewBox="0 -960 960 960"
+     width="24px"
+     fill="#5f6368"
+     class="shrink-0 size-8 text-gray-800 mt-0.5 me-6 dark:text-neutral-200"><path d="M160-200q-17 0-28.5-11.5T120-240q0-17 11.5-28.5T160-280q17 0 28.5 11.5T200-240q0 17-11.5 28.5T160-200Zm240 0q0-83-31.5-156T281-488q-46-46-104-77t-128-39v-81q86 9 160.5 44.5T340-561q57 57 92.5 131.5T477-240h-77Zm240 0q0-116-44-217.5T469-588q-85-85-186.5-129T64-760v-80q142 9 264.5 66.5T548-580q103 103 160.5 225.5T776-80h-80Z" /></svg>' %}
     </div>
   </div>
 {% endblock content %}
