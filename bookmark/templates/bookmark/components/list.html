@@ -1,5 +1,5 @@
 {% load static %}
-<div class="flex justify-between gap-4 md:gap-6 py-4 md:py-6">
+<div class="flex justify-between gap-4 flex-col md:flex-row md:gap-6 py-4 md:py-6">
   {% if item.favicon %}
     <img src="/{{ item.favicon }}" class="h-6 w-6">
   {% else %}
@@ -9,7 +9,9 @@
     <div class="text-base font-semibold text-gray-900 dark:text-white">
       <a href="{{ item.url }}" target="_blank" class="hover:underline">{{ item.title }}</a>
     </div>
-    <div class="text-sm text-gray-500 dark:text-gray-400 pt-2">{{ item.og_description|truncatechars:200 }}</div>
+    <div class="text-sm text-gray-500 dark:text-gray-400 pt-2 hidden md:block">
+      {{ item.og_description|truncatechars:200 }}
+    </div>
     <div class="mt-1">
       <span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 inset-ring inset-ring-yellow-600/20 dark:bg-yellow-400/10 dark:text-yellow-500 dark:inset-ring-yellow-400/20">{{ item.category|default_if_none:"" }}</span>
       {% for tag in item.tags.all %}
@@ -19,9 +21,9 @@
   </div>
   {% if item.og_image %}
     <img src="/{{ item.og_image }}"
-         class="h-20 w-auto object-cover md:col-span-2">
+         class="h-20 w-auto object-cover md:col-span-2 hidden md:block">
   {% endif %}
-  <div class="md:col-span-3 content-center order-1 md:order-3 flex items-center justify-between">
+  <div class="md:col-span-3 content-center hidden md:flex items-center justify-between">
     <button id="actionsMenuDropdown_{{ item.id }}"
             data-dropdown-toggle="dropdownOrder_{{ item.id }}"
             type="button"
