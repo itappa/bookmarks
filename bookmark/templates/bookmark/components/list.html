@@ -1,0 +1,41 @@
+{% load static %}
+<div class="flex justify-between gap-4 md:gap-6 py-4 md:py-6">
+  {% if item.favicon %}
+    <img src="/{{ item.favicon }}" class="h-6 w-6">
+  {% else %}
+    <img src="{% static 'images/no_favicon.svg' %}" class="h-6 w-6">
+  {% endif %}
+  <div class="flex-grow">
+    <div class="text-base font-semibold text-gray-900 dark:text-white">
+      <a href="{{ item.url }}" target="_blank" class="hover:underline">{{ item.title }}</a>
+    </div>
+    <div class="text-sm text-gray-500 dark:text-gray-400 pt-2">{{ item.og_description|truncatechars:200 }}</div>
+    <div class="mt-1">
+      <span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 inset-ring inset-ring-yellow-600/20 dark:bg-yellow-400/10 dark:text-yellow-500 dark:inset-ring-yellow-400/20">{{ item.category|default_if_none:"" }}</span>
+      {% for tag in item.tags.all %}
+        <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 inset-ring inset-ring-green-600/20 dark:bg-green-400/10 dark:text-green-400 dark:inset-ring-green-500/20">{{ tag.name }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% if item.og_image %}
+    <img src="/{{ item.og_image }}"
+         class="h-20 w-auto object-cover md:col-span-2">
+  {% endif %}
+  <div class="md:col-span-3 content-center order-1 md:order-3 flex items-center justify-between">
+    <button id="actionsMenuDropdown_{{ item.id }}"
+            data-dropdown-toggle="dropdownOrder_{{ item.id }}"
+            type="button"
+            class="inline-flex h-7 w-7 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+      <span class="sr-only">Actions</span>
+      <svg class="h-6 w-6"
+           aria-hidden="true"
+           xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           fill="none"
+           viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-linecap="round" stroke-width="4" d="M6 12h.01m6 0h.01m5.99 0h.01"></path>
+      </svg>
+    </button>
+  </div>
+</div>

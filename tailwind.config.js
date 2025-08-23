@@ -3,7 +3,6 @@ module.exports = {
   content: [
     "./templates/*.html",
     "./templates/**/*.html",
-    "./node_modules/flowbite/**/*.js",
   ],
   theme: {
     extend: {
@@ -14,9 +13,6 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/forms'),
-    require('flowbite/plugin')({
-      datatables: true,
-    }),
   ],
 }
 

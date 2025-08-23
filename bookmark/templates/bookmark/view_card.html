@@ -1,8 +1,7 @@
 {% extends "bookmark/base.html" %}
-{% load static %}
 {% block content %}
   {{ block.super }}
-  <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+  <div class="mx-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
     {% for item in items %}
       {% include "bookmark/components/card.html" with item=item %}
     {% empty %}

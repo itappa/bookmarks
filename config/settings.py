@@ -14,6 +14,10 @@ USE_TAILWIND_CDN = env.bool("USE_TAILWIND_CDN", default=False)
 
 ALLOWED_HOSTS = ["*"]
 
+INTERNAL_IPS = [
+    "localhost",
+    "127.0.0.1",
+]
 
 # Application definition
 

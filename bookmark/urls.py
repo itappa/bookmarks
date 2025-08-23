@@ -10,8 +10,9 @@ urlpatterns = [
     path("delete/<int:pk>/", views.delete_view, name="delete"),
     path("quick-add/", views.quick_add_bookmark, name="quick_add_bookmark"),
     path("fetch-ogp/", views.fetch_ogp_data, name="fetch_ogp_data"),
-    path("category/<str:str>/", views.item_list_by_category, name="item_list_by_category"),
-    path("table/", views.table, name="table"),
+    path(
+        "category/<str:str>/", views.item_list_by_category, name="item_list_by_category"
+    ),
     path("card/", ItemListView.as_view(), name="card"),
     path("list/", views.list, name="list"),
     path("", views.list, name="index"),

@@ -53,8 +53,6 @@ dependencies = [
     { name = "beautifulsoup4" },
     { name = "billiard" },
     { name = "bs4" },
-    { name = "celery" },
-    { name = "celery-progress" },
     { name = "certifi" },
     { name = "charset-normalizer" },
     { name = "click" },
@@ -67,12 +65,9 @@ dependencies = [
     { name = "django" },
     { name = "django-admin-sortable2" },
     { name = "django-allauth" },
-    { name = "django-async-upload" },
-    { name = "django-celery-results" },
     { name = "django-cleanup" },
     { name = "django-debug-toolbar" },
     { name = "django-environ" },
-    { name = "django-ffmpeg" },
     { name = "django-filter" },
     { name = "django-import-export" },
     { name = "django-js-asset" },
@@ -81,7 +76,6 @@ dependencies = [
     { name = "djangorestframework" },
     { name = "djlint" },
     { name = "editorconfig" },
-    { name = "flower" },
     { name = "gunicorn" },
     { name = "html-tag-names" },
     { name = "html-void-elements" },
@@ -91,7 +85,6 @@ dependencies = [
     { name = "json5" },
     { name = "kombu" },
     { name = "lxml" },
-    { name = "m3u8" },
     { name = "packaging" },
     { name = "pathspec" },
     { name = "pillow" },
@@ -102,7 +95,6 @@ dependencies = [
     { name = "python-dotenv" },
     { name = "pytz" },
     { name = "pyyaml" },
-    { name = "redis" },
     { name = "regex" },
     { name = "requests" },
     { name = "ruff" },
@@ -125,8 +117,6 @@ requires-dist = [
     { name = "beautifulsoup4", specifier = "==4.12.3" },
     { name = "billiard", specifier = "==4.2.1" },
     { name = "bs4", specifier = "==0.0.2" },
-    { name = "celery", specifier = "==5.4.0" },
-    { name = "celery-progress", specifier = "==0.4" },
     { name = "certifi", specifier = "==2024.8.30" },
     { name = "charset-normalizer", specifier = "==3.4.0" },
     { name = "click", specifier = "==8.1.7" },
@@ -137,23 +127,19 @@ requires-dist = [
     { name = "cssbeautifier", specifier = "==1.15.1" },
     { name = "diff-match-patch", specifier = "==20241021" },
     { name = "django", specifier = "==4.2.16" },
-    { name = "django-admin-sortable2", specifier = "==2.2.4" },
+    { name = "django-admin-sortable2" },
     { name = "django-allauth", specifier = "==65.9.0" },
-    { name = "django-async-upload", specifier = "==4.0.1" },
-    { name = "django-celery-results", specifier = "==2.5.1" },
     { name = "django-cleanup", specifier = "==9.0.0" },
     { name = "django-debug-toolbar", specifier = "==4.4.6" },
-    { name = "django-environ", specifier = ">=0.12.0" },
-    { name = "django-ffmpeg", specifier = "==0.1.7" },
+    { name = "django-environ", specifier = "==0.12.0" },
     { name = "django-filter", specifier = "==24.3" },
     { name = "django-import-export", specifier = "==4.1.1" },
     { name = "django-js-asset", specifier = "==2.2.0" },
-    { name = "django-mptt", specifier = "==0.16.0" },
+    { name = "django-mptt", specifier = ">=0.17.0" },
     { name = "django-widget-tweaks", specifier = "==1.5.0" },
     { name = "djangorestframework", specifier = "==3.16.1" },
     { name = "djlint", specifier = "==1.35.2" },
     { name = "editorconfig", specifier = "==0.12.4" },
-    { name = "flower", specifier = "==2.0.1" },
     { name = "gunicorn", specifier = "==23.0.0" },
     { name = "html-tag-names", specifier = "==0.1.2" },
     { name = "html-void-elements", specifier = "==0.1.0" },
@@ -163,7 +149,6 @@ requires-dist = [
     { name = "json5", specifier = "==0.9.25" },
     { name = "kombu", specifier = "==5.4.2" },
     { name = "lxml", specifier = "==6.0.0" },
-    { name = "m3u8", specifier = "==6.0.0" },
     { name = "packaging", specifier = "==24.1" },
     { name = "pathspec", specifier = "==0.12.1" },
     { name = "pillow", specifier = "==11.0.0" },
@@ -174,7 +159,6 @@ requires-dist = [
     { name = "python-dotenv", specifier = "==1.0.1" },
     { name = "pytz", specifier = "==2024.2" },
     { name = "pyyaml", specifier = "==6.0.2" },
-    { name = "redis", specifier = "==5.2.0" },
     { name = "regex", specifier = "==2024.9.11" },
     { name = "requests", specifier = "==2.32.3" },
     { name = "ruff", specifier = "==0.7.0" },
@@ -200,35 +184,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/c9/aa/4acaf814ff901145da37332e05bb510452ebed97bc9602695059dd46ef39/bs4-0.0.2.tar.gz", hash = "sha256:a48685c58f50fe127722417bae83fe6badf500d54b55f7e39ffe43b798653925", size = 698 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/51/bb/bf7aab772a159614954d84aa832c129624ba6c32faa559dfb200a534e50b/bs4-0.0.2-py2.py3-none-any.whl", hash = "sha256:abf8742c0805ef7f662dce4b51cca104cffe52b835238afc169142ab9b3fbccc", size = 1189 },
-]
-
-[[package]]
-name = "celery"
-version = "5.4.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "billiard" },
-    { name = "click" },
-    { name = "click-didyoumean" },
-    { name = "click-plugins" },
-    { name = "click-repl" },
-    { name = "kombu" },
-    { name = "python-dateutil" },
-    { name = "tzdata" },
-    { name = "vine" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/8a/9c/cf0bce2cc1c8971bf56629d8f180e4ca35612c7e79e6e432e785261a8be4/celery-5.4.0.tar.gz", hash = "sha256:504a19140e8d3029d5acad88330c541d4c3f64c789d85f94756762d8bca7e706", size = 1575692 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/90/c4/6a4d3772e5407622feb93dd25c86ce3c0fee746fa822a777a627d56b4f2a/celery-5.4.0-py3-none-any.whl", hash = "sha256:369631eb580cf8c51a82721ec538684994f8277637edde2dfc0dacd73ed97f64", size = 425983 },
-]
-
-[[package]]
-name = "celery-progress"
-version = "0.4"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/af/3b/5e6facf5cefbff0eb42ded0eead292d264204bf8d4ef8c9667859b54481b/celery_progress-0.4.tar.gz", hash = "sha256:0343a9a5111e1790c3b68fb5ce0b7889dd05b445e77e2f42469303acaea2ecbf", size = 15926 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/ca/24/8559dc0593b130ba8198c2bcdc8e809977fa84cce231add13b56244da1b3/celery_progress-0.4-py3-none-any.whl", hash = "sha256:7521b38a3160ef18b214c241810830698fa4734094d2819098256f83bc1c7a4d", size = 17277 },
 ]
 
 [[package]]
@@ -358,14 +313,14 @@ wheels = [
 
 [[package]]
 name = "django-admin-sortable2"
-version = "2.2.4"
+version = "2.2.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ee/a1/0651ad69906f9ec9e73897353e933611550c6d31bfa9f721319c0ed99108/django_admin_sortable2-2.2.4.tar.gz", hash = "sha256:155e6114c7a931bceed9513af014f782ff1e643d99e81ddfef934f1daecd669d", size = 68207 }
+sdist = { url = "https://files.pythonhosted.org/packages/d4/76/8af26a825442fb33688c820cf79e4b769d8c4b976a2ddaa7434b96706e05/django_admin_sortable2-2.2.8.tar.gz", hash = "sha256:59dfd7ced63e66adfb471b2a4d89ba3faae49c0148827047c8cf65759fc54c9e", size = 64599 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/66/c3/e804b1f04546c1060e566f35177c346590820a95bfb981d1f6360b419437/django_admin_sortable2-2.2.4-py3-none-any.whl", hash = "sha256:406c5b6d6e84ad982cc6e53c3f34b5db5f0a3f34891126af90c9fb2c372f53d5", size = 90816 },
+    { url = "https://files.pythonhosted.org/packages/8a/97/7d0b28f52027f36751cec372f0eaf3a5bc1be169a141818acece40628e04/django_admin_sortable2-2.2.8-py3-none-any.whl", hash = "sha256:b4cf66d75450b0f89c883d94b10e6133a4e7832c5bfed1568e3e71e400dc2b48", size = 90597 },
 ]
 
 [[package]]
@@ -377,28 +332,6 @@ dependencies = [
     { name = "django" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/9d/a3/00aa9d5bb5df4f7464495675074dc11107c08b3eea3462fb3edc059d71e1/django_allauth-65.9.0.tar.gz", hash = "sha256:a06bca9974df44321e94c33bcf770bb6f924d1a44b57defbce4d7ec54a55483e", size = 1710514 }
-
-[[package]]
-name = "django-async-upload"
-version = "4.0.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/81/aa/105ac9880d5d158660197ed3ed631578ba12b321b0fb4959af157f40dd51/django-async-upload-4.0.1.tar.gz", hash = "sha256:30e54e0876ca5368e143cbe79d03874d88939de34eb4c09d57919725103b71d5", size = 22339 }
-
-[[package]]
-name = "django-celery-results"
-version = "2.5.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "celery" },
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/75/24/a13ad6a276f62385da6d83a1995ded452d173841b6e0a83a899c3b75062e/django_celery_results-2.5.1.tar.gz", hash = "sha256:3ecb7147f773f34d0381bac6246337ce4cf88a2ea7b82774ed48e518b67bb8fd", size = 80944 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/05/2e/aa82857354d5227922c2ae6e83e5214537d8f108184bfeea6704d0b045d8/django_celery_results-2.5.1-py3-none-any.whl", hash = "sha256:0da4cd5ecc049333e4524a23fcfc3460dfae91aa0a60f1fae4b6b2889c254e01", size = 36293 },
-]
 
 [[package]]
 name = "django-cleanup"
@@ -430,16 +363,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/d6/04/65d2521842c42f471
 wheels = [
     { url = "https://files.pythonhosted.org/packages/83/b3/0a3bec4ecbfee960f39b1842c2f91e4754251e0a6ed443db9fe3f666ba8f/django_environ-0.12.0-py2.py3-none-any.whl", hash = "sha256:92fb346a158abda07ffe6eb23135ce92843af06ecf8753f43adf9d2366dcc0ca", size = 19957 },
 ]
-
-[[package]]
-name = "django-ffmpeg"
-version = "0.1.7"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-    { name = "pillow" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/29/f6/aceca24473ffccff654eab57259f7474c6418e404ca59c3662a75757fbe1/django-ffmpeg-0.1.7.zip", hash = "sha256:8943630560223e9ab8619a67f0cb1c395cd5754aec37eb078e572e3390c5c6fd", size = 18702 }
 
 [[package]]
 name = "django-filter"
@@ -481,14 +404,14 @@ wheels = [
 
 [[package]]
 name = "django-mptt"
-version = "0.16.0"
+version = "0.17.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django-js-asset" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/06/58/11dcda841c5570cecab15d52362096e36bf61c0a7013df903e9747bc6a6c/django_mptt-0.16.0.tar.gz", hash = "sha256:56c9606bf0b329b5f5afd55dd8bfd073612ea1d5999b10903b09de62bee84c8e", size = 69886 }
+sdist = { url = "https://files.pythonhosted.org/packages/24/67/90f48b70f854d24a0c73db2837fa63746ebf548ba2075c4c829cb25674a9/django_mptt-0.17.0.tar.gz", hash = "sha256:e2dca00536450b91bdc80d8fc1454993b84307728394ae42c72947fc09574d3d", size = 71428 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/45/27/61a39b0d716e52be2df7d9fed6e35fe10eb3faaf207cdfaac3f9f68ecb1a/django_mptt-0.16.0-py3-none-any.whl", hash = "sha256:8716849ba3318d94e2e100ed0923a05c1ffdf8195f8472b690dbaf737d2af3b5", size = 115934 },
+    { url = "https://files.pythonhosted.org/packages/8d/81/ce5576765cea3cdb37c983400f76050194c354d55a3facf39561cf24adc2/django_mptt-0.17.0-py3-none-any.whl", hash = "sha256:e77dd4b4d0de14f50239b0900def44c1d31403664ab3682b80b27fa1319fe7f0", size = 120170 },
 ]
 
 [[package]]
@@ -539,22 +462,6 @@ name = "editorconfig"
 version = "0.12.4"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/3d/85/7b5c2fac7fdc37d959fab714b13b9acb75884490dcc0e8b1dc5e64105084/EditorConfig-0.12.4.tar.gz", hash = "sha256:24857fa1793917dd9ccf0c7810a07e05404ce9b823521c7dce22a4fb5d125f80", size = 13278 }
-
-[[package]]
-name = "flower"
-version = "2.0.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "celery" },
-    { name = "humanize" },
-    { name = "prometheus-client" },
-    { name = "pytz" },
-    { name = "tornado" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/09/a1/357f1b5d8946deafdcfdd604f51baae9de10aafa2908d0b7322597155f92/flower-2.0.1.tar.gz", hash = "sha256:5ab717b979530770c16afb48b50d2a98d23c3e9fe39851dcf6bc4d01845a02a0", size = 3220408 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a6/ff/ee2f67c0ff146ec98b5df1df637b2bc2d17beeb05df9f427a67bd7a7d79c/flower-2.0.1-py2.py3-none-any.whl", hash = "sha256:9db2c621eeefbc844c8dd88be64aef61e84e2deb29b271e02ab2b5b9f01068e2", size = 383553 },
-]
 
 [[package]]
 name = "gunicorn"
@@ -659,15 +566,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/5f/01/d48cc141bc47bc1644d20fe97bbd5e8afb30415ec94f146f2f76d0d9d098/lxml-6.0.0-cp313-cp313-win32.whl", hash = "sha256:5fcd7d3b1d8ecb91445bd71b9c88bdbeae528fefee4f379895becfc72298d181", size = 3612896 },
     { url = "https://files.pythonhosted.org/packages/f4/87/6456b9541d186ee7d4cb53bf1b9a0d7f3b1068532676940fdd594ac90865/lxml-6.0.0-cp313-cp313-win_amd64.whl", hash = "sha256:2f34687222b78fff795feeb799a7d44eca2477c3d9d3a46ce17d51a4f383e32e", size = 4013132 },
     { url = "https://files.pythonhosted.org/packages/b7/42/85b3aa8f06ca0d24962f8100f001828e1f1f1a38c954c16e71154ed7d53a/lxml-6.0.0-cp313-cp313-win_arm64.whl", hash = "sha256:21db1ec5525780fd07251636eb5f7acb84003e9382c72c18c542a87c416ade03", size = 3672642 },
-]
-
-[[package]]
-name = "m3u8"
-version = "6.0.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/9b/a5/73697aaa99bb32b610adc1f11d46a0c0c370351292e9b271755084a145e6/m3u8-6.0.0.tar.gz", hash = "sha256:7ade990a1667d7a653bcaf9413b16c3eb5cd618982ff46aaff57fe6d9fa9c0fd", size = 42720 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/f8/31/50f3c38b38ff28635ff9c4a4afefddccc5f1b57457b539bdbdf75ce18669/m3u8-6.0.0-py3-none-any.whl", hash = "sha256:566d0748739c552dad10f8c87150078de6a0ec25071fa48e6968e96fc6dcba5d", size = 24133 },
 ]
 
 [[package]]
@@ -800,15 +698,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/fe/0f/25911a9f080464c59fab9027482f822b86bf0608957a5fcc6eaac85aa515/PyYAML-6.0.2-cp313-cp313-musllinux_1_1_x86_64.whl", hash = "sha256:68ccc6023a3400877818152ad9a1033e3db8625d899c72eacb5a668902e4d652", size = 751597 },
     { url = "https://files.pythonhosted.org/packages/14/0d/e2c3b43bbce3cf6bd97c840b46088a3031085179e596d4929729d8d68270/PyYAML-6.0.2-cp313-cp313-win32.whl", hash = "sha256:bc2fa7c6b47d6bc618dd7fb02ef6fdedb1090ec036abab80d4681424b84c1183", size = 140527 },
     { url = "https://files.pythonhosted.org/packages/fa/de/02b54f42487e3d3c6efb3f89428677074ca7bf43aae402517bc7cca949f3/PyYAML-6.0.2-cp313-cp313-win_amd64.whl", hash = "sha256:8388ee1976c416731879ac16da0aff3f63b286ffdd57cdeb95f3f2e085687563", size = 156446 },
-]
-
-[[package]]
-name = "redis"
-version = "5.2.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/53/17/2f4a87ffa4cd93714cf52edfa3ea94589e9de65f71e9f99cbcfa84347a53/redis-5.2.0.tar.gz", hash = "sha256:0b1087665a771b1ff2e003aa5bdd354f15a70c9e25d5a7dbf9c722c16528a7b0", size = 4607878 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/12/f5/ffa560ecc4bafbf25f7961c3d6f50d627a90186352e27e7d0ba5b1f6d87d/redis-5.2.0-py3-none-any.whl", hash = "sha256:ae174f2bb3b1bf2b09d54bf3e51fbc1469cf6c10aa03e21141f51969801a7897", size = 261428 },
 ]
 
 [[package]]

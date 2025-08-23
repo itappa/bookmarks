@@ -1,0 +1,12 @@
+{% extends "bookmark/base.html" %}
+{% load static %}
+{% block content %}
+  {{ block.super }}
+  <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+    <div class="divide-y divide-gray-200 dark:divide-gray-700">
+      {% for item in items %}
+        {% include "bookmark/components/list.html" with item=item %}
+      {% endfor %}
+    </div>
+  </div>
+{% endblock content %}
