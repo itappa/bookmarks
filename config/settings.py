@@ -80,6 +80,32 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "debug.log",
+            "formatter": "verbose",
+        },
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["file", "console"],
+        "level": "INFO",
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -131,6 +157,9 @@ STATIC_ROOT = "/var/staticfiles/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+MEDIA_URL = "media/"
+MEDIA_ROOT = "/var/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
